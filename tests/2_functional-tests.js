@@ -10,8 +10,9 @@ const chaiHttp = require('chai-http');
 const chai = require('chai');
 const assert = chai.assert;
 const server = require('../server');
-
 chai.use(chaiHttp);
+
+let id =''
 
 suite('Functional Tests', function() {
 
@@ -41,11 +42,29 @@ suite('Functional Tests', function() {
     suite('POST /api/books with title => create book object/expect book object', function() {
       
       test('Test POST /api/books with title', function(done) {
-        //done();
+        chai.request(server)
+        .post('/api/books')
+        .send({
+          title: 'Moby Dick'
+         })
+        .end(function(err, res){
+          assert.equal(res.status, 200)
+          assert.equal(res.body.title, "Moby Dick")
+          assert.isNotNull(res.body._id)
+          id = res.body._id
+          console.log("id has been set as " + id)
+          done();
+        })
       });
       
       test('Test POST /api/books with no title given', function(done) {
-        //done();
+        chai.request(server)
+        .post('/api/books')
+        .send({})
+        .end(function(err, res){
+          assert.equal(res.body, "missing required field title")
+        })
+        done();
       });
       
     });
