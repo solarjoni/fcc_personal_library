@@ -28,6 +28,20 @@ let uri = 'mongodb+srv://new-user:' + process.env.PW + '@cluster0.2cqnt.mongodb.
     .get(function (req, res){
       //response will be array of book objects
       //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
+      let arrayOfBooks = []
+      Book.find(
+        {},
+        (error, results) => {
+          if(!error && results) {
+            results.forEach((result) => {
+              let book = result.toJSON()
+              book['commentcount'] = book.comments.length
+              arrayOfBooks.push(book)
+            })
+            return res.json(arrayOfBooks)
+          }
+        }
+      )
     })
     
     .post(function (req, res){
@@ -57,6 +71,14 @@ let uri = 'mongodb+srv://new-user:' + process.env.PW + '@cluster0.2cqnt.mongodb.
     .get(function (req, res){
       let bookid = req.params.id;
       //json res format: {"_id": bookid, "title": book_title, "comments": [comment,comment,...]}
+      Book.findById(
+        bookid,
+        (error, result) => {
+          if(!error && result) {
+            return res.json(result)
+          }
+        }
+      )
     })
     
     .post(function(req, res){
