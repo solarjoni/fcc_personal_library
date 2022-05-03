@@ -8,7 +8,13 @@
 
 'use strict';
 
+let mongodb = require('mongodb')
+let mongoose = require('mongoose')
+
+let uri = 'mongodb+srv://new-user:' + process.env.PW + '@cluster0.2cqnt.mongodb.net/fcc_personal_library?retryWrites=true&w=majority'
+
 module.exports = function (app) {
+  mongoose.connect(uri, { useNewUrlPArser: true, useUnifiedTopology: true, serverApi: mongodb.ServerApiVersion.v1} )
 
   app.route('/api/books')
     .get(function (req, res){
